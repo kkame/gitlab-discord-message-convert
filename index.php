@@ -4,10 +4,12 @@ $webhook = substr($_SERVER['REQUEST_URI'], 1);
 
 $payload = file_get_contents('php://input');
 
-if(empty($webhook))
+if (empty($webhook)) {
     die("Empty webhook");
-if(empty($payload))
+}
+if (empty($payload)) {
     die("Empty payload");
+}
 
 $payloadObject = json_decode($payload);
 
@@ -36,9 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($ch, CURLOPT_HTTPHEADER, getallheaders());
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, 1);
 
 $response = curl_exec($ch);
 curl_close($ch);
 
+list($headers, $body) = explode("\r\n\r\n", $response);
 
-echo $response;
+foreach (explode("\n", $headers) as $header) {
+    header($header);
+}
+//preg_match('/.+([0-9]{3}).*/',$headers[0],$matches);
+
+echo $body;
