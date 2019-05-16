@@ -17,4 +17,4 @@ Enter the url of the webhook in the slack channel name setting
 ### example
 This service is not guaranteed.
 
-- https://gitlab-discord-message-convert.herokuapp.com/https://{YouDiscordWebhook}/slack
+- https://gitlab-discord-message-convert.herokuapp.com/https://{YourDiscordWebhook}/slack
