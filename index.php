@@ -1,15 +1,13 @@
 <?php
 
-
 $webhook = substr($_SERVER['REQUEST_URI'], 1);
-
 
 $payload = file_get_contents('php://input');
 
 if(empty($webhook))
-    throw new Exception("Empty webhook");
+    die("Empty webhook");
 if(empty($payload))
-    throw new Exception("Empty payload");
+    die("Empty payload");
 
 $payloadObject = json_decode($payload);
 
@@ -23,17 +21,10 @@ if (isset($payloadObject->channel) && filter_var($payloadObject->channel, FILTER
 //If attachments are empty, they are considered to be the wrong pattern
 if (empty($payloadObject->attachments)) {
 
-
-    $attachment = (object)[
-        'text' => $payloadObject->text,
-    ];
+    $attachment = (object)['text' => $payloadObject->text,];
     $payloadObject->attachments = [$attachment];
-
-    unset($payloadObject->fallback);
-    unset($payloadObject->text);
     $payload = json_encode($payloadObject);
 }
-
 
 $ch = curl_init($webhook);
 
@@ -41,27 +32,13 @@ $ch = curl_init($webhook);
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     curl_setopt($ch, CURLOPT_POST, 1);
 }
+
 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($ch, CURLOPT_HTTPHEADER, getallheaders());
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, 1);
 
 $response = curl_exec($ch);
 curl_close($ch);
 
 
-list($header, $body) = explode("\r\n\r\n", $response, 2);
-
-$data = explode("\n", $header);
-$response_status_code = $data[0];
-http_response_code($response_status_code);
-
-
-array_shift($data);
-
-foreach ($data as $part) {
-    header($part);
-}
-
-
-echo $body;
+echo $response;
