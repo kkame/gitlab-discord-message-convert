@@ -6,6 +6,8 @@ $webhook = substr($_SERVER['REQUEST_URI'], 1);
 
 $payload = file_get_contents('php://input');
 
+if(empty($webhook))
+    throw new Exception("Empty webhook");
 if(empty($payload))
     throw new Exception("Empty payload");
 
