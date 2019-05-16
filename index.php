@@ -5,10 +5,10 @@ $webhook = substr($_SERVER['REQUEST_URI'], 1);
 $payload = file_get_contents('php://input');
 
 if (empty($webhook)) {
-    die("Empty webhook");
+    die("Empty webhook. Read https://github.com/kkame/gitlab-discord-message-convert");
 }
 if (empty($payload)) {
-    die("Empty payload");
+    die("Empty payload. Read https://github.com/kkame/gitlab-discord-message-convert");
 }
 
 $payloadObject = json_decode($payload);
